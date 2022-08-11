@@ -1,0 +1,14 @@
+.container{
+    margin-top:20px;
+    width:75%;
+}
+.title{
+    margin-top:20px;
+    margin-bottom: 20px;
+}
+.single-news{
+    background-color:#ddd;
+    padding:30px;
+    margin-bottom:20px;
+    margin-top:20px;
+}

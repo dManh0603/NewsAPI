@@ -1,0 +1,6 @@
+{
+    "require": {
+        "jcobhams/newsapi": "^1.0",
+        "ext-curl": "*"
+    }
+}
