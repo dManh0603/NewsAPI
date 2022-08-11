@@ -3,7 +3,7 @@
 $endpoint = 'everything?';
 $keyword = 'latest';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['keyword'] !== '') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['keyword'])) {
     $keyword = $_GET['keyword'];
 //    $endpoint = 'top-headlines?';
 }
@@ -110,30 +110,30 @@ curl_close($curl);
     <!--    </div>-->
 
     <!--    ARTICLES-->
-    <?php if($output->totalResults > 0): ?>
-    <?php foreach ($output->articles as $article): ?>
-    <div class="card m-3 shadow">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="<?= $article->urlToImage ?>" class="img-fluid rounded-start" alt="...">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title"><?= $article->title ?></h5>
-                    <p class="card-text"><?= $article->description ?></p>
-                    <p class="card-text"><small
-                                class="text-muted"><?php echo date('F j, Y, g:i a', strtotime($article->publishedAt)) ?></small>
-                    </p>
-                    <a href="<?= $article->url ?>" target="_blank" class="btn btn-secondary">Read More</a>
-                    <p></p>
+    <?php if ($output->totalResults > 0): ?>
+        <?php foreach ($output->articles as $article): ?>
+            <div class="card m-3 shadow">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="<?= $article->urlToImage ?>" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= $article->title ?></h5>
+                            <p class="card-text"><?= $article->description ?></p>
+                            <p class="card-text"><small
+                                        class="text-muted"><?php echo date('F j, Y, g:i a', strtotime($article->publishedAt)) ?></small>
+                            </p>
+                            <a href="<?= $article->url ?>" target="_blank" class="btn btn-secondary">Read More</a>
+                            <p></p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
     <?php else: ?>
         <div class="d-flex justify-content-center mb-3">
-            <img class ="img-fluid" src="assets/images/no_results_found.webp" width="700px" alt="#404">
+            <img class="img-fluid" src="assets/images/no_results_found.webp" width="700px" alt="#404">
         </div>
     <?php endif; ?>
 
