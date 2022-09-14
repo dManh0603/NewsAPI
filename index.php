@@ -1,17 +1,9 @@
 <!--    Call API-->
 <?php
-$endpoint = 'everything?';
-$keyword = 'latest';
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['keyword'])) {
-    $keyword = $_GET['keyword'];
-//    $endpoint = 'top-headlines?';
-}
-
 $curl = curl_init();
 //$ApiKey = '75fd580f046a4d8aafdb04a4023170ec';
-$url = "https://newsapi.org/v2/" . $endpoint . "q=" . $keyword . "&apiKey=75fd580f046a4d8aafdb04a4023170ec";
-echo $url;
+$url = "https://newsapi.org/v2/everything?q=latest&apiKey=75fd580f046a4d8aafdb04a4023170ec";
+
 // set our url with curl_setopt()
 curl_setopt_array($curl, array(
     CURLOPT_URL => $url,
@@ -34,6 +26,7 @@ $output = json_decode(curl_exec($curl));
 // close curl resource to free up system resources
 // (deletes the variable made by curl_init)
 curl_close($curl);
+
 
 ?>
 <!--    Cognitive TTS-->
@@ -70,6 +63,32 @@ curl_close($curl);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <title>News Web</title>
+    <script>
+        function load_ajax() {
+            $.ajax({
+                url: "articles.php", // gửi ajax đến file articles.php
+                type: "get", // chọn phương thức gửi là get
+                dateType: "text", // dữ liệu trả về dạng text
+                data: { // Danh sách các thuộc tính sẽ gửi đi
+                    keyword: $('#keyword').val()
+                },
+                success: function (result) {
+                    // Sau khi gửi và kết quả trả về thành công thì gán nội dung trả về
+                    // đó vào thẻ div có id = result
+                    $('#content-section').html(result);
+                }
+            });
+        }
+
+        // $(document).on({
+        //     ajaxStart: function () {
+        //         $("#load_ui").removeClass("d-none");
+        //     },
+        //     ajaxStop: function () {
+        //         $("#load_ui").addClass("d-none");
+        //     }
+        // });
+    </script>
 </head>
 <body>
 <!--    NAVBAR-->
@@ -93,8 +112,9 @@ curl_close($curl);
         <div class="col-12 d-flex justify-content-center">
             <div class="input-group mb-3" style="width: 50%;transform: scale(1.3);">
                 <input type="text" class="form-control shadow" name="keyword" placeholder="What you looking for ?"
-                       aria-label="Recipient's username" aria-describedby="button-addon2" formmethod="get">
-                <button class="btn btn-danger shadow" type="submit" id="button-addon2">Search</button>
+                       aria-label="Recipient's username" aria-describedby="button-addon2" formmethod="get" id="keyword">
+                <button class="btn btn-danger shadow" type="button" id="button-addon2" onclick="load_ajax()">Search
+                </button>
             </div>
         </div>
     </form>
@@ -102,15 +122,15 @@ curl_close($curl);
 </div>
 <!--    CONTENT SECTION-->
 <div class="container">
-    <!--    LOADING'S SPINNER-->
-    <!--    <div class="d-flex justify-content-center">-->
-    <!--        <div class="spinner-border" id = "load_ui" role="status">-->
-    <!--            <span class="visually-hidden">Loading...</span>-->
-    <!--        </div>-->
-    <!--    </div>-->
+    <!--  LOADING'S SPINNER-->
+    <div class="d-flex justify-content-center spinner d-none" id="load_ui">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 
-    <!--    ARTICLES-->
-    <?php if ($output->totalResults > 0): ?>
+    <!--    CONTENT'S SECTION-->
+    <div id="content-section">
         <?php foreach ($output->articles as $article): ?>
             <div class="card m-3 shadow">
                 <div class="row g-0">
@@ -131,21 +151,14 @@ curl_close($curl);
                 </div>
             </div>
         <?php endforeach; ?>
-    <?php else: ?>
-        <div class="d-flex justify-content-center mb-3">
-            <img class="img-fluid" src="assets/images/no_results_found.webp" width="700px" alt="#404">
-        </div>
-    <?php endif; ?>
-
-
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
         crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-        crossorigin="anonymous">
-</script>
+        crossorigin="anonymous"></script>
 
 </body>
 </html>
